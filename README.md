@@ -1,24 +1,27 @@
-# bsiv
+# Disclaimer
+This is an early stage of the code. It does what I need it to do for now. If ever someone is interested, I can clean up the code and provide better documentation and better functionnality. 
+
+# robust_efficient_iv
 This package will:
 - compute the Black-Scholes Implied Volatility for calls and puts
-- using the regular method by optimizing 
+- using method='L-BFGS-B'
+- The objective function is mostly well behaved, but has flat sections at machine precision. A good starting value is necessary, or multiple starting values.
 
-## univariate polynomial example
-Suppose you have x, and y data, and you want to model y = a0 + a1 x + a2 x^2 + a3 x^3 + a4 x^4
-Let Mat be a numpy matrix of size (N,1), where N is the number of data points.
-X = polyhorner.horner(Mat, 4) will build your X matrix ready for the regression (optimized using Horner's method)
+## Starting Values
+For now, I need this for calculating my IV from bid and ask quotes. I can use the broker's calculated IV as a starting value. 
+### Future updates on starting values
+I intend to have a preliminary step with several starting values, and then an optimization from the best point, using the other points has bounds for the optimization.
 
-## multivaraite polynomial example
-Suppose you have x, y, and z data, and you want to model using apolynomial of order 3 in x, and 2 in y, with cross-products
-z = a0 + a1 x + a2 x^2 + a3 x^3 + a4 y + a5 y^2 + a6 xy + a7 x^2y + a8 x^3y + a9 xy^2 + a10 x^2y^2 + a11 x^3y^2
-let Mat be a numpy matrix of size (N,2), where N is the number of data points.
-let Expo be a numpy matrix of size (2,1) = (3,2)
-X = polyhorner.horner(Mat, Expo) will build your X matrix ready for the regression (semi-optimized using Horner's method)
+## implied_volatility(...)
+uses optimize.minimize to find the Implied Volatility.
 
+## objfunc_square(...)
+Simply use the square error on pricing as objective function
 
+## black_scholesv(...)
+Uses numba jit to compute option prices
 
-I use some functions distributed under the GNU LGPL license from 
-https://people.sc.fsu.edu/~jburkardt/py_src/monomial
+## ndtr_numba(...)
+Uses numba jit to quickly compute gaussian cumulative density 
+(This is from: https://github.com/cuemacro/teaching/blob/master/pythoncourse/notebooks/numba_example.ipynb)
 
-
-Thanks to Pssolanki for helping fix issues

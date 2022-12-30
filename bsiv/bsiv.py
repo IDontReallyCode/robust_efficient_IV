@@ -1,13 +1,37 @@
 import numba
 import numpy as np
-from corncdf import normCdf, ndtr_numba
+# from corncdf import normCdf, ndtr_numba
 from scipy import optimize
 from scipy.stats import norm
 from numba import njit
+from math import fabs, erf, erfc #, exp
 
 NEWTON = 0
 LBFGSB = 1
 NEWTONCG = 2
+
+NPY_SQRT1_2 = 1.0/ np.sqrt(2)
+     
+@njit(cache=True, fastmath=True)
+def ndtr_numba(a):
+    # (This is from: https://github.com/cuemacro/teaching/blob/master/pythoncourse/notebooks/numba_example.ipynb)
+
+    if (np.isnan(a)):
+        return np.nan
+
+    x = a * NPY_SQRT1_2
+    z = fabs(x)
+
+    if (z < NPY_SQRT1_2):
+        y = 0.5 + 0.5 * erf(x)
+
+    else:
+        y = 0.5 * erfc(z)
+
+        if (x > 0):
+            y = 1.0 - y
+
+    return y
 
 
 @numba.jit
@@ -170,9 +194,10 @@ def implied_volatility(option_price, S, K, r, t, option_type, guessiv=0.75, ivbo
     # bounds = optimize.Bounds(0.05, 20)
     # result = optimize.minimize(objfuncjac_square, 5, args=(option_price, S, K, r, t, option_type), method='L-BFGS-B', bounds=[(0.05, 20)], tol=1.0E-22, jac=True,
     #                            options={'ftol':1.0E-22, 'gtol':1.0E-22, 'iprint':-1})
-    result = optimize.minimize(objfunc_square, guessiv, args=(option_price, S, K, r, t, option_type), method='L-BFGS-B', bounds=ivbounds, tol=1.0E-22, 
-                               options={'ftol':1.0E-22, 'gtol':1.0E-22, 'iprint':-1})
-    # result = optimize.minimize(objective_function, 1, args=(option_price, S, K, r, t, option_type), method='Newton-CG', jac=vegav, options={'xtol':1.0E-22, 'disp':99999})
+    # result = optimize.minimize(objfunc_square, guessiv, args=(option_price, S, K, r, t, option_type), method='L-BFGS-B', bounds=ivbounds, tol=1.0E-22, 
+                            #    options={'ftol':1.0E-22, 'gtol':1.0E-22, 'iprint':-1})
+    result = optimize.minimize(objfuncjac_square, guessiv, args=(option_price, S, K, r, t, option_type), method='Newton-CG', jac=True)
+    # result = optimize.minimize(objfuncjac_square, guessiv, args=(option_price, S, K, r, t, option_type), method='Newton-CG', jac=True, options={'xtol':1.0E-12, 'disp':-1})
     # result = optimize.minimize(min_func, 1, args=(option_price, S, K, r, t, option_type), method='Nelder-Mead', bounds=[(0.01, 20)], tol=1.0E-22, jac=vegav, 
     #                            options={'ftol':1.0E-22, 'gtol':1.0E-22, 'iprint':7867634})
     

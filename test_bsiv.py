@@ -1,4 +1,4 @@
-import bsiv
+import reiv
 import numpy as np
 # import 
 
@@ -14,8 +14,8 @@ K = np.reshape(Km, Km.shape[0]*Km.shape[1]*Km.shape[2])
 T = np.reshape(Tm, Tm.shape[0]*Tm.shape[1]*Km.shape[2])
 v = np.reshape(Vm, Vm.shape[0]*Vm.shape[1]*Km.shape[2])
 
-c = bsiv.black_scholesv(v, S, K, r, T, 1)
-p = bsiv.black_scholesv(v, S, K, r, T, 0)
+c = reiv.black_scholesv(v, S, K, r, T, 1)
+p = reiv.black_scholesv(v, S, K, r, T, 0)
 
 # print(c)
 # print(p)
@@ -29,8 +29,8 @@ otmpK = K[S<=K]
 otmpT = T[S<=K]
 otmpv = v[S<=K]
 
-ivc = [bsiv.implied_volatility(otmcp[x], S, otmcK[x], r, otmcT[x], 1, guessiv=otmcv[x]) for x in range(len(otmcp))]
-ivp = [bsiv.implied_volatility(otmpp[x], S, otmpK[x], r, otmpT[x], 0, guessiv=otmpv[x]) for x in range(len(otmpp))]
+ivc = [reiv.implied_volatility(otmcp[x], S, otmcK[x], r, otmcT[x], 1, guessiv=otmcv[x]) for x in range(len(otmcp))]
+ivp = [reiv.implied_volatility(otmpp[x], S, otmpK[x], r, otmpT[x], 0, guessiv=otmpv[x]) for x in range(len(otmpp))]
 
 # ivc = [bsiv.find_vol(otmcp[x], S, otmcK[x], r, otmcT[x], 1) for x in range(len(otmcp))]
 # ivp = [bsiv.find_vol(otmpp[x], S, otmpK[x], r, otmpT[x], 0) for x in range(len(otmpp))]

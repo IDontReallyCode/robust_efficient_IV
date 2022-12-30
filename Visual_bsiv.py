@@ -1,4 +1,4 @@
-import bsiv
+import reiv
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,8 +13,8 @@ Km, Tm = np.meshgrid(K,T)
 K = np.reshape(Km, Km.shape[0]*Km.shape[1])
 T = np.reshape(Tm, Tm.shape[0]*Tm.shape[1])
 
-c = bsiv.black_scholesv(v, S, K, r, T, 1)
-p = bsiv.black_scholesv(v, S, K, r, T, 0)
+c = reiv.black_scholesv(v, S, K, r, T, 1)
+p = reiv.black_scholesv(v, S, K, r, T, 0)
 
 print(c)
 print(p)
@@ -36,11 +36,11 @@ maxv = 5
 nvs = 100
 vvec = np.linspace(minv, maxv, nvs)
 
-objective = bsiv.grid_search(otmcp[0], S, otmcK[0], r, otmcT[0], 1, bsiv.objfunc_square, vvec)
+objective = reiv.grid_search(otmcp[0], S, otmcK[0], r, otmcT[0], 1, reiv.objfunc_square, vvec)
 plt.plot(vvec, objective)
 plt.show()
 
-ivc = [bsiv.find_vol(otmcp[x], S, otmcK[x], r, otmcT[x], 1) for x in range(len(otmcp))]
+ivc = [reiv.find_vol(otmcp[x], S, otmcK[x], r, otmcT[x], 1) for x in range(len(otmcp))]
 
 pause=1
 

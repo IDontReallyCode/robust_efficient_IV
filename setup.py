@@ -3,14 +3,14 @@ from setuptools import setup, find_packages
 
 HERE = pathlib.Path(__file__).parent
 
-VERSION = '1.0.0'
-PACKAGE_NAME = 'baw_iv'
+VERSION = '4.1.0'
+PACKAGE_NAME = 'reiv'
 AUTHOR = 'IDontReallyCode'
 AUTHOR_EMAIL = 'idontreallycode@outlook.com'
 URL = 'https://github.com/IDontReallyCode/baw_iv'
 
 LICENSE = 'MIT'
-DESCRIPTION = 'Barone-Adesi and Whaley (BAW) approximation to Black-Sholes Implied Volatility (IV)'
+DESCRIPTION = 'Black-Sholes Implied Volatility, robust and efficient (reiv)'
 LONG_DESCRIPTION = (HERE / "README.md").read_text()
 LONG_DESC_TYPE = "text/markdown"
 
